@@ -9,8 +9,12 @@ const Todo = () => {
   useEffect(() => {
     localStorage.setItem('tasks', JSON.stringify(tasks));
   }, [tasks]);
-  const addTask = (taskText) => setTasks((tasks) => [...tasks, {taskText, isCompleted: false}]);
-  const tasksList = tasks.map(el => <Task taskText={el.taskText} isCompleted={el.isCompleted}/>);
+  const addTask = (taskText) => setTasks((tasks) => [...tasks, {taskText, isCompleted: false, id: new Date().getTime()}]);
+  const editTask = (editedTask) => {
+    const filteredTasks = tasks.filter(el => el.id !== editedTask.id);
+    setTasks([...filteredTasks, editedTask]);
+  };
+  const tasksList = tasks.map((el, ind) => <Task key={el.id} task={el} editTask={editTask}/>);
   return (
     <>
       <h1>To do app</h1>
@@ -20,12 +24,15 @@ const Todo = () => {
   )
 };
 
-const Task = ({taskText, isCompleted}) => {
-  //todo add complete button
-  const cn = isCompleted ? "completed" : "";
+const Task = ({task, editTask}) => {
+  const handleClick = () => {
+    const editedTask = {...task, isCompleted: !task.isCompleted};
+    editTask(editedTask);
+  };
+  const cn = task.isCompleted ? "completed" : "";
   return (
-    <div className={cn}>{taskText}</div>
-  )
+    <div onClick={handleClick} className={cn}>{task.taskText}</div>
+  );
 } 
 
 const AddTask = ({addTask}) => {
