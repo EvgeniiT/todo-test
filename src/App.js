@@ -22,7 +22,6 @@ const Todo = () => {
     updatedTasks.splice(deleteInd, 1);
     setTasks(updatedTasks);
   }
-  // const tasksList = tasks.map((el) => <Task key={el.id} task={el} editTask={editTask} deleteTask={deleteTask}/>);
   return (
     <>
       <h1>To do app</h1>
@@ -46,9 +45,12 @@ const TaskList = ({tasks, editTask, deleteTask}) => {
 
 const Task = ({task, editTask, deleteTask}) => {
   const [isEditMode, setEditMode] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(task.isCompleted);
   const [editedTaskText, setEditedTaskText] = useState(task.taskText);
-  const handleTextClick = () => {
-    const editedTask = {...task, isCompleted: !task.isCompleted};
+  const handleCompleteChange = (e) => {
+    const isCompleted = e.target.checked;
+    setIsCompleted(isCompleted);
+    const editedTask = {...task, isCompleted};
     editTask(editedTask);
   };
   const handleEditClick = () => {
@@ -65,17 +67,21 @@ const Task = ({task, editTask, deleteTask}) => {
   }
   const cn = task.isCompleted ? "completed" : "";
   return (
-    <>
-      <div onClick={handleTextClick} className={cn}>{task.taskText}</div>
+    <div className="task">
+      <div className={cn}>{task.taskText}</div>
       <button onClick={handleEditClick}>Edit</button>
       <button onClick={handleDeleteClick}>Delete</button>
+      <label>
+        <input type="checkbox" checked={isCompleted} onChange={handleCompleteChange}/>
+        Complete
+      </label>
       {isEditMode &&
         <div>
           <input value={editedTaskText} onChange={handleChange}/>
           <button onClick={handleSaveClick}>Save</button>
         </div>
       }
-    </>
+    </div>
   );
 } 
 
