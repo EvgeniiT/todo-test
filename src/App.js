@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import './App.css';
 import AddTaskPanel from './components/AddTaskPanel';
 import TaskList from './components/TaskList';
+import 'antd/dist/antd.css';
 
 const Todo = () => {
   const [tasks, setTasks] = useState([]);
@@ -35,7 +36,9 @@ const Todo = () => {
 
 function App() {
   return (
-    <Todo/>
+    <div className="App">
+      <Todo/>
+    </div>
   );
 }
 
