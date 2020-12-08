@@ -16,8 +16,13 @@ const Todo = () => {
     editedTasks.splice(editInd, 1, editedTask);
     setTasks(editedTasks);
   };
-
-  const tasksList = tasks.map((el, ind) => <Task key={el.id} task={el} editTask={editTask}/>);
+  const deleteTask = (taskId) => {
+    const deleteInd = tasks.findIndex(el => el.id === taskId);
+    const updatedTasks = [...tasks];
+    updatedTasks.splice(deleteInd, 1);
+    setTasks(updatedTasks);
+  }
+  const tasksList = tasks.map((el, ind) => <Task key={el.id} task={el} editTask={editTask} deleteTask={deleteTask}/>);
   return (
     <>
       <h1>To do app</h1>
@@ -27,14 +32,14 @@ const Todo = () => {
   )
 };
 
-const Task = ({task, editTask}) => {
+const Task = ({task, editTask, deleteTask}) => {
   const [isEditMode, setEditMode] = useState(false);
   const [editedTaskText, setEditedTaskText] = useState(task.taskText);
   const handleTextClick = () => {
     const editedTask = {...task, isCompleted: !task.isCompleted};
     editTask(editedTask);
   };
-  const handleButtonClick = () => {
+  const handleEditClick = () => {
     setEditMode(true);
   }
   const handleChange = (e) => setEditedTaskText(e.target.value);
@@ -43,11 +48,15 @@ const Task = ({task, editTask}) => {
     editTask(editedTask);
     setEditMode(false);
   }
+  const handleDeleteClick = () => {
+    deleteTask(task.id)
+  }
   const cn = task.isCompleted ? "completed" : "";
   return (
     <>
       <div onClick={handleTextClick} className={cn}>{task.taskText}</div>
-      <button onClick={handleButtonClick}>Edit</button>
+      <button onClick={handleEditClick}>Edit</button>
+      <button onClick={handleDeleteClick}>Delete</button>
       {isEditMode &&
         <div>
           <input value={editedTaskText} onChange={handleChange}/>
