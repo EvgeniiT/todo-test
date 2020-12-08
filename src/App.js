@@ -16,6 +16,7 @@ const Todo = () => {
     editedTasks.splice(editInd, 1, editedTask);
     setTasks(editedTasks);
   };
+
   const tasksList = tasks.map((el, ind) => <Task key={el.id} task={el} editTask={editTask}/>);
   return (
     <>
@@ -27,13 +28,33 @@ const Todo = () => {
 };
 
 const Task = ({task, editTask}) => {
-  const handleClick = () => {
+  const [isEditMode, setEditMode] = useState(false);
+  const [editedTaskText, setEditedTaskText] = useState(task.taskText);
+  const handleTextClick = () => {
     const editedTask = {...task, isCompleted: !task.isCompleted};
     editTask(editedTask);
   };
+  const handleButtonClick = () => {
+    setEditMode(true);
+  }
+  const handleChange = (e) => setEditedTaskText(e.target.value);
+  const handleSaveClick = () => {
+    const editedTask = {...task, taskText: editedTaskText};
+    editTask(editedTask);
+    setEditMode(false);
+  }
   const cn = task.isCompleted ? "completed" : "";
   return (
-    <div onClick={handleClick} className={cn}>{task.taskText}</div>
+    <>
+      <div onClick={handleTextClick} className={cn}>{task.taskText}</div>
+      <button onClick={handleButtonClick}>Edit</button>
+      {isEditMode &&
+        <div>
+          <input value={editedTaskText} onChange={handleChange}/>
+          <button onClick={handleSaveClick}>Save</button>
+        </div>
+      }
+    </>
   );
 } 
 
