@@ -11,8 +11,10 @@ const Todo = () => {
   }, [tasks]);
   const addTask = (taskText) => setTasks((tasks) => [...tasks, {taskText, isCompleted: false, id: new Date().getTime()}]);
   const editTask = (editedTask) => {
-    const filteredTasks = tasks.filter(el => el.id !== editedTask.id);
-    setTasks([...filteredTasks, editedTask]);
+    const editInd = tasks.findIndex(el => el.id === editedTask.id);
+    const editedTasks = [...tasks];
+    editedTasks.splice(editInd, 1, editedTask);
+    setTasks(editedTasks);
   };
   const tasksList = tasks.map((el, ind) => <Task key={el.id} task={el} editTask={editTask}/>);
   return (
