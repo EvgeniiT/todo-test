@@ -22,15 +22,27 @@ const Todo = () => {
     updatedTasks.splice(deleteInd, 1);
     setTasks(updatedTasks);
   }
-  const tasksList = tasks.map((el, ind) => <Task key={el.id} task={el} editTask={editTask} deleteTask={deleteTask}/>);
+  // const tasksList = tasks.map((el) => <Task key={el.id} task={el} editTask={editTask} deleteTask={deleteTask}/>);
   return (
     <>
       <h1>To do app</h1>
       <AddTask addTask={addTask}/>
-      {tasksList}
+      <TaskList tasks={tasks} editTask={editTask} deleteTask={deleteTask}/>
     </>
   )
 };
+
+const TaskList = ({tasks, editTask, deleteTask}) => {
+  const naturalSort = (a, b, isReverse) => {
+    const rtn =  a.localeCompare(b, undefined, {
+      numeric: true,
+      sensitivity: 'base'
+    });
+    return isReverse ? -1 * rtn : rtn;
+  };
+  const sortedTasks = tasks.sort((a, b) => naturalSort(a.taskText, b.taskText, true));
+  return sortedTasks.map((el) => <Task key={el.id} task={el} editTask={editTask} deleteTask={deleteTask}/>);
+}
 
 const Task = ({task, editTask, deleteTask}) => {
   const [isEditMode, setEditMode] = useState(false);
